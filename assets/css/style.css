@@ -1,0 +1,41 @@
+:root {
+    --primary-color: #EEEBD0;
+    --secondary-color: #92817A;
+    --tertiary-color: #003844;
+}
+
+body {
+    background-color: var(--primary-color);
+}
+
+.jumbotron {
+    text-align: center;
+    background-color: var(--secondary-color);
+    color: var(--tertiary-color);
+}
+
+.card-header {
+    background-color: var(--secondary-color);
+    text-align: center;
+
+}
+
+#city-form {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    border-radius: 25px;
+}
+
+.city-input {
+    width: 100%;
+    height: 35px;
+}
+
+.btn {
+    width: 100%;
+    border: solid 1px var(--tertiary-color);
+    height: 35px;
+}
