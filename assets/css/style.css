@@ -39,3 +39,18 @@ body {
     border: solid 1px var(--tertiary-color);
     height: 35px;
 }
+
+.btn:hover {
+    background-color: var(--secondary-color);
+    font-style: italic;
+}
+
+.prev-btn {
+    width: 50%;
+    justify-content: center;
+    height: 30px;
+}
+
+.weather-list {
+    border: 1px solid var(--tertiary-color);
+}
