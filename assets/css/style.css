@@ -68,7 +68,7 @@ p {
 }
 
 .weather-list {
-    border: 1px solid var(--tertiary-color);
-    flex: auto;
+    position: absolute;
+    clear: both;
     float: right;
 }

@@ -11,10 +11,10 @@
     <title>weather dashboard</title>
 </head>
 
-<body class="flex-column min-100-vh">
+<body class="flex-column min-50-vh">
     <header class="jumbotron">
         <h1 class="weather-title">weather dashboard</h1>
-        <p>search by city to see future weather conditions.</p>
+        <p>search by city to see future weather conditions</p>
     </header>
 
 <main class="flex-row justify-content-between">
@@ -23,19 +23,19 @@
             <h3 class="card-header text-lowercase">search by city</h3>
             <form id="city-form" class="card-body">
             <label name="city-name" for="city"></label>
-            <input name="city-name" id="city-name" type="text" autofocus="true" class="city-input"/>
+            <input name="city-name" id="city-name" type="text" autofocus="true" class="city-input" placeholder="city"/>
             <button type="submit" class="btn mt-2" id="submit-btn">search</button>
             </form>
         </div>
         <div class="card mt-3">
             <h3 class="card-header text-lowercase">previously searched cities</h3>
             <div class="city-previous" id="city-previous">
-                <button class="prev-btn m-1"></button>
+                <!-- <button class="prev-btn m-1"></button> -->
             </div>
         </div>
     </div>
-        <div class="weather-list col-12 col-md-8">
-            <h2 class="city-info">Showing results for <span id="city-search"></span></h2>
+        <div class="weather-list col-12 col-md-12 col-xl-8">
+            <h2 class="city-info">Showing results for: <span id="city-search"></span></h2>
             <div id="city-info-container" class="list-group"></div>
         </div>
 </main>
