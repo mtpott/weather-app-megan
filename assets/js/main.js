@@ -139,14 +139,14 @@ var displayCity = function(city, data) {
         //append weatherEl to its parent container, citySearchResultEl
         citySearchResultEl.appendChild(dayEl);
     }
-    console.log(dateArray);
-    console.log(minTempArray);
-    console.log(maxTempArray);
-    console.log(humidArray);
-    console.log(descriptionArray);
+    // console.log(dateArray);
+    // console.log(minTempArray);
+    // console.log(maxTempArray);
+    // console.log(humidArray);
+    // console.log(descriptionArray);
 
     //weatherColor(maxTempData, locationEl);
-    console.log(data.list[i].weather[0]);
+    // console.log(data.list[i].weather[0]);
 };
 
 //if the max temp is colder than 32, make the div gray
@@ -169,12 +169,26 @@ var weatherColor = function(maxTempData, locationEl) {
 
 var saveCity = function(city) {
     //inside of the function, i want to save the value of the text input
-    console.log("saveCity function");
+    localStorage.setItem("previousCity", city);
 
-    localStorage.setItem("previousCity", city.textContent);
-    console.log(city);
+    //create button to hold savedCity data
+    var savedCityEl = document.createElement("button");
+    savedCityEl.classList = "prev-btn m-1";
 
-    //append previously searched cities to the parent container, citySaveText
+    //append savedCityEl to the parent container, citySaveText
+    var savedCity = localStorage.getItem("previousCity");
+    console.log(savedCity);
+    savedCityEl.textContent = savedCity;
+    
+    citySaveText.appendChild(savedCityEl);
+
+    var prevButtonEl = document.querySelector("#prev-btn");
+
+    //when i click the button, run the function to complete the api call (displayCity)
+    prevButtonEl.click = function() {
+        displayCity;
+    };
+    //create new function to use previous button to search?
 };
 
 citySubmitEl.addEventListener("submit", citySearchHandler);
