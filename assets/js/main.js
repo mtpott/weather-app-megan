@@ -24,6 +24,7 @@ var descriptionArray = [];
 var minTempArray = [];
 var maxTempArray = [];
 var humidArray = [];
+var iconArray = [];
 
 // WHEN I search for a city
 // THEN I am presented with current and future conditions for that city and that city is added to the search history
@@ -72,7 +73,6 @@ var displayCity = function(city, data) {
         citySearchResultEl.textContent = "no information found.";
         return;
     }
-    console.log(city);
     citySearchTerm.textContent = city;
     
     //loop over the weather days
@@ -100,6 +100,12 @@ var displayCity = function(city, data) {
         var humidData = data.list[i].main.humidity;
         var descriptionData = JSON.stringify(data.list[i].weather[0].description);
 
+        //to display icons
+        //var icon = JSON.stringify(data.list[i].weather[0].icon);
+        var icon = data.list[i].weather[0].icon;
+        var iconImage = "http://openweathermap.org/img/wn/" + icon + ".png";
+        console.log(iconImage);
+
         var dateEl = document.createElement("h4");
         dateEl.textContent = readDate;
         dateEl.classList = "ml-2";
@@ -115,16 +121,16 @@ var displayCity = function(city, data) {
         var descriptionEl = document.createElement("p");
         descriptionEl.textContent = "conditions: " + descriptionData;
         descriptionEl.classList = "ml-2";
+        var iconEl = document.createElement("div");
+        iconEl.classList = "ml-2";
+        iconEl.innerHTML = "<img src='" + iconImage + "'>";
 
         dateArray.push(dateData);
         descriptionArray.push(descriptionData);
         minTempArray.push(minTempData);
         maxTempArray.push(maxTempData);
         humidArray.push(humidData);
-
-        //weather type--if it's favorable, make the container light blue
-        //if it's moderate, make the container light gray
-        //if it's storming, make the container darker gray
+        iconArray.push(icon);
 
         //append locationEl to its parent container, dayEl
         dayEl.appendChild(locationEl);
@@ -132,6 +138,7 @@ var displayCity = function(city, data) {
         //append weather data to the parent container, dayEl
         dayEl.appendChild(dateEl);
         dayEl.appendChild(descriptionEl);
+        dayEl.appendChild(iconEl);
         dayEl.appendChild(maxTempEl);
         dayEl.appendChild(minTempEl);
         dayEl.appendChild(humidEl);
@@ -139,29 +146,23 @@ var displayCity = function(city, data) {
         //append weatherEl to its parent container, citySearchResultEl
         citySearchResultEl.appendChild(dayEl);
     }
-    // console.log(dateArray);
-    // console.log(minTempArray);
-    // console.log(maxTempArray);
-    // console.log(humidArray);
-    // console.log(descriptionArray);
-
-    //weatherColor(maxTempData, locationEl);
-    // console.log(data.list[i].weather[0]);
+    // weatherColor(descriptionData, locationEl);
 };
 
 //if the max temp is colder than 32, make the div gray
 //if the max temp is greater than/equal to 32 AND less than/equal to 50, make the div light gray
-var weatherColor = function(maxTempData, locationEl) {
-    if (maxTempData < 33) {
-        locationEl.classList = "text-muted";
-    } else if (maxTempData >= 32 && maxTempData <= 50) {
-        locationEl.classList = "text-secondary";
-    } else if (maxTempData >= 50 && maxTempData <= 75) {
-        locationEl.classList = "text-success";
-    } else {
-        location.classList = "text-warning";
-    };
-};
+// var weatherColor = function(descriptionData, locationEl) {
+//     if (descriptionData === "storms") {
+//         locationEl.classList = "text-muted";
+//     } else if (descriptionData === "clouds") {
+//         locationEl.classList = "text-secondary";
+//     } else if (descriptionData === ) {
+//         locationEl.classList = "text-success";
+//     } else {
+//         location.classList = "text-warning";
+//     };
+// };
+
 
 //save previously searched cities to local storage
 //when i click the search button, i will automatically run this function
@@ -173,22 +174,24 @@ var saveCity = function(city) {
 
     //create button to hold savedCity data
     var savedCityEl = document.createElement("button");
-    savedCityEl.classList = "prev-btn m-1";
+    savedCityEl.classList = "prev-btn m-2";
 
     //append savedCityEl to the parent container, citySaveText
     var savedCity = localStorage.getItem("previousCity");
-    console.log(savedCity);
     savedCityEl.textContent = savedCity;
+    //console.log(savedCity);
     
     citySaveText.appendChild(savedCityEl);
 
-    var prevButtonEl = document.querySelector("#prev-btn");
-
+    //var prevButtonEl = document.querySelector("#prev-btn");
     //when i click the button, run the function to complete the api call (displayCity)
-    prevButtonEl.click = function() {
-        displayCity;
-    };
     //create new function to use previous button to search?
+
+    savedCityEl.onclick = function() {
+        //console.log(city);
+        citySearchTerm.textContent = savedCity;
+        displayCity(savedCity);
+    };
 };
 
 citySubmitEl.addEventListener("submit", citySearchHandler);

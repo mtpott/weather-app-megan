@@ -8,6 +8,7 @@ body {
     background-color: var(--primary-color);
     font-family: 'Be Vietnam Pro', sans-serif;
     font-size: 20px;
+    color: var(--tertiary-color);
 }
 
 .jumbotron {
@@ -59,12 +60,22 @@ p {
 .btn:hover {
     background-color: var(--secondary-color);
     font-style: italic;
+    opacity: 0.5;
 }
 
 .prev-btn {
-    width: 50%;
+    width: 25%;
     justify-content: center;
     height: 30px;
+    border-radius: 25px;
+    background-color: var(--primary-color);
+    color: var(--tertiary-color);
+}
+
+.prev-btn:hover {
+    background-color: var(--secondary-color);
+    font-style: italic;
+    opacity: 0.5;
 }
 
 .weather-list {
