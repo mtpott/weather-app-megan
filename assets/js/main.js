@@ -1,13 +1,3 @@
-// GIVEN a weather dashboard with form inputs
-// WHEN I view current weather conditions for that city
-// THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
-// WHEN I view the UV index
-// THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-// WHEN I view future weather conditions for that city
-// THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, the wind speed, and the humidity
-// WHEN I click on a city in the search history
-// THEN I am again presented with current and future conditions for that city
-
 var citySearchResultEl = document.querySelector("#city-info-container");
 var citySearchTerm = document.querySelector("#city-search");
 var previousButtonsEl = document.querySelector("#city-buttons");
@@ -24,10 +14,9 @@ var descriptionArray = [];
 var minTempArray = [];
 var maxTempArray = [];
 var humidArray = [];
+var windArray = [];
 var iconArray = [];
 
-// WHEN I search for a city
-// THEN I am presented with current and future conditions for that city and that city is added to the search history
 var citySearchHandler = function(event) {
     event.preventDefault();
 
@@ -38,12 +27,10 @@ var citySearchHandler = function(event) {
         //run the function that has the fetch/response inside
         findCity(city);
         saveCity(city);
-
         //clear out old content for better user experience
         citySearchResultEl.textContent = "";
         cityEl.value = "";
         return;
-
     } else {
         alert("please enter a valid city!");
     }
@@ -60,7 +47,7 @@ var findCity = function(city) {
                 displayCity(city, data);
             });
         } else {
-            alert("error! we can't find the city you're looking for :(");
+            alert("error! could not find the city you're looking for :(");
         }
     })
     .catch(function(error) {
@@ -91,38 +78,40 @@ var displayCity = function(city, data) {
         var readDate = dateData.toLocaleString();
 
         var locationEl = document.createElement("h3");
-        locationEl.classList = "ml-2";
+        locationEl.classList = "ml-2 mt-1 text-center";
         locationEl.textContent = dayName;
 
         var dateData = readDate;
         var minTempData = data.list[i].main.temp_min;
         var maxTempData = data.list[i].main.temp_max;
         var humidData = data.list[i].main.humidity;
+        var windData = data.list[i].wind.speed;
         var descriptionData = JSON.stringify(data.list[i].weather[0].description);
 
         //to display icons
-        //var icon = JSON.stringify(data.list[i].weather[0].icon);
         var icon = data.list[i].weather[0].icon;
         var iconImage = "http://openweathermap.org/img/wn/" + icon + ".png";
-        console.log(iconImage);
 
         var dateEl = document.createElement("h4");
         dateEl.textContent = readDate;
-        dateEl.classList = "ml-2";
+        dateEl.classList = "weather ml-2 text-center";
         var minTempEl = document.createElement("p");
         minTempEl.textContent = "low: " + minTempData;
-        minTempEl.classList = "ml-2";
+        minTempEl.classList = "weather ml-2 text-center";
         var maxTempEl = document.createElement("p");
         maxTempEl.textContent = "high: " + maxTempData;
-        maxTempEl.classList = "ml-2";
+        maxTempEl.classList = "weather ml-2 text-center";
         var humidEl = document.createElement("p");
         humidEl.textContent = "humidity: " + humidData + "%";
-        humidEl.classList = "ml-2";
+        humidEl.classList = "weather ml-2 text-center";
+        var windEl = document.createElement("p");
+        windEl.textContent = "wind speed: " + windData;
+        windEl.classList = "weather ml-2 text-center";
         var descriptionEl = document.createElement("p");
         descriptionEl.textContent = "conditions: " + descriptionData;
-        descriptionEl.classList = "ml-2";
+        descriptionEl.classList = "weather ml-2 text-center";
         var iconEl = document.createElement("div");
-        iconEl.classList = "ml-2";
+        iconEl.classList = "ml-2 mx-auto";
         iconEl.innerHTML = "<img src='" + iconImage + "'>";
 
         dateArray.push(dateData);
@@ -130,6 +119,7 @@ var displayCity = function(city, data) {
         minTempArray.push(minTempData);
         maxTempArray.push(maxTempData);
         humidArray.push(humidData);
+        windArray.push(windData);
         iconArray.push(icon);
 
         //append locationEl to its parent container, dayEl
@@ -142,33 +132,20 @@ var displayCity = function(city, data) {
         dayEl.appendChild(maxTempEl);
         dayEl.appendChild(minTempEl);
         dayEl.appendChild(humidEl);
+        dayEl.appendChild(windEl);
 
         //append weatherEl to its parent container, citySearchResultEl
         citySearchResultEl.appendChild(dayEl);
     }
-    // weatherColor(descriptionData, locationEl);
 };
 
-//if the max temp is colder than 32, make the div gray
-//if the max temp is greater than/equal to 32 AND less than/equal to 50, make the div light gray
-// var weatherColor = function(descriptionData, locationEl) {
-//     if (descriptionData === "storms") {
-//         locationEl.classList = "text-muted";
-//     } else if (descriptionData === "clouds") {
-//         locationEl.classList = "text-secondary";
-//     } else if (descriptionData === ) {
-//         locationEl.classList = "text-success";
-//     } else {
-//         location.classList = "text-warning";
-//     };
-// };
+//saved city string
+var cityString = [];
 
-
-//save previously searched cities to local storage
-//when i click the search button, i will automatically run this function
-//in order to add my search to localStorage
-
+// WHEN I click on a city in the search history
+// THEN I am again presented with current and future conditions for that city
 var saveCity = function(city) {
+
     //inside of the function, i want to save the value of the text input
     localStorage.setItem("previousCity", city);
 
@@ -176,21 +153,17 @@ var saveCity = function(city) {
     var savedCityEl = document.createElement("button");
     savedCityEl.classList = "prev-btn m-2";
 
-    //append savedCityEl to the parent container, citySaveText
     var savedCity = localStorage.getItem("previousCity");
     savedCityEl.textContent = savedCity;
-    //console.log(savedCity);
     
+    //append savedCityEl to the parent container, citySaveText
     citySaveText.appendChild(savedCityEl);
 
-    //var prevButtonEl = document.querySelector("#prev-btn");
-    //when i click the button, run the function to complete the api call (displayCity)
-    //create new function to use previous button to search?
-
+    //add city's value to the localstorage array in order to save to buttons
     savedCityEl.onclick = function() {
-        //console.log(city);
         citySearchTerm.textContent = savedCity;
-        displayCity(savedCity);
+        findCity(savedCity);
+
     };
 };
 
