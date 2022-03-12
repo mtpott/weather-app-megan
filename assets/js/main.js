@@ -16,6 +16,7 @@ var maxTempArray = [];
 var humidArray = [];
 var windArray = [];
 var iconArray = [];
+var uvArray = [];
 
 var citySearchHandler = function(event) {
     event.preventDefault();
@@ -62,8 +63,6 @@ var cityCoords = function(city) {
 
 var findCity = function(lat, lon, city) {
 
-    //https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&&appid=cb4e52cc5777eb1ec0226a6d4ac1e0a8
-
     //fetch request
     fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely,alerts&units=imperial&appid=cb4e52cc5777eb1ec0226a6d4ac1e0a8`)
     .then(function(response) {
@@ -91,7 +90,7 @@ var displayCity = function(city, data) {
     for (var i = 0; i < city.length; i++) {
 
         var dayName = city;
-    
+
         //create containers for each response
         //these will contain the corresponding weather data
         var dayEl = document.createElement("div");
@@ -112,18 +111,11 @@ var displayCity = function(city, data) {
         var humidData = data.daily[i].humidity;
         var windData = data.daily[i].wind_speed;
         var descriptionData = data.daily[i].weather[0].description;
-
-        // console.log(dateData);
-        // console.log(minTempData);
-        // console.log(maxTempData)
-        // console.log(humidData);
-        // console.log(windData);
-        // console.log(descriptionData);
+        var uvData = data.daily[i].uvi;
         
         //to display icons
         var icon = data.daily[i].weather[0].icon;
         var iconImage = "http://openweathermap.org/img/wn/" + icon + ".png";
-        // console.log(icon);
 
         var dateEl = document.createElement("h4");
         dateEl.textContent = readDate;
@@ -147,6 +139,11 @@ var displayCity = function(city, data) {
         iconEl.classList = "ml-2 mx-auto";
         iconEl.innerHTML = "<img src='" + iconImage + "'>";
 
+
+        var uvEl = document.createElement("p");
+        uvEl.textContent = "uv: " + uvData;
+        uvEl.classList = "weather ml-2 text-center";
+
         dateArray.push(dateData);
         descriptionArray.push(descriptionData);
         minTempArray.push(minTempData);
@@ -154,6 +151,7 @@ var displayCity = function(city, data) {
         humidArray.push(humidData);
         windArray.push(windData);
         iconArray.push(icon);
+        uvArray.push(uvData);
 
         //append locationEl to its parent container, dayEl
         dayEl.appendChild(locationEl);
@@ -166,11 +164,33 @@ var displayCity = function(city, data) {
         dayEl.appendChild(minTempEl);
         dayEl.appendChild(humidEl);
         dayEl.appendChild(windEl);
+        dayEl.appendChild(uvEl);
 
         //append weatherEl to its parent container, citySearchResultEl
         citySearchResultEl.appendChild(dayEl);
+        //uvColor(uvData, uvEl);
     }
 };
+
+ //to change the color of the uv text
+//  uvColor = function(uvData, uvEl) {
+//     for (var i = 0; i < uvData.length; i++) {
+//         //if uvData is greater than/equal to 0 or less than/equal to 2, the text is green
+//         if (uvData >= 0 || uvData <= 2) {
+//             uvEl.classList = "weather ml-2 text-center text-success";
+//         //if uvData is greater than/equal to 3 or less than/equal to 7, the text is yellow
+//         } else if (uvData >= 3 || uvData <= 7) {
+//             uvEl.classList = "weather ml-2 text-center text-warning";
+//         //if uvData is greater than/equal to 8 or less than/equal to 10, the text is red
+//         } else if (uvData >= 8 || uvData <= 10) {
+//             uvEl.classList = "weather ml-2 text-center text-danger";
+//         //if uvData is greater than 11, the text is blue
+//         } else if (uvData >= 11) {
+//             uvEl.classList = "weather ml-2 text-center text-primary";
+//         };
+//     }
+//     dayEl.appendChild(uvEl);
+//  }
 
 //saved city string
 var cityString = [];
