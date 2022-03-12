@@ -42,7 +42,7 @@ var citySearchHandler = function(event) {
 //use those coordinates in findCity in order to use the opencall api
 
 var cityCoords = function(city) {
-    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=cb4e52cc5777eb1ec0226a6d4ac1e0a8`)
+    fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=cb4e52cc5777eb1ec0226a6d4ac1e0a8`)
     .then(function(response) {
         if(response.ok){
             response.json().then(function(location) {
