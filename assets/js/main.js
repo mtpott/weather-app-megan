@@ -25,8 +25,7 @@ var citySearchHandler = function(event) {
 
     if (city) {
         //run the function that has the fetch/response inside
-        findCity(city);
-        saveCity(city);
+        cityCoords(city);
         //clear out old content for better user experience
         citySearchResultEl.textContent = "";
         cityEl.value = "";
@@ -37,10 +36,36 @@ var citySearchHandler = function(event) {
     //console.log(event);
 };
 
-var findCity = function(city) {
+
+//use geocoding api from openweathermap to find the latitude and longitude by city
+//use those coordinates in findCity in order to use the opencall api
+
+var cityCoords = function(city) {
+    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=cb4e52cc5777eb1ec0226a6d4ac1e0a8`)
+    .then(function(response) {
+        if(response.ok){
+            response.json().then(function(location) {
+                var lat = location[0].lat;
+                var lon = location[0].lon;
+                var city = location[0].name;
+                findCity(lat, lon, city);
+                saveCity(lat, lon, city);
+            });
+        } else {
+            alert("error! couldn't find what you're looking for.");
+        }
+    })
+    .catch(function(error) {
+        alert("error! could not connect to the weather dashboard :(");
+    });
+};
+
+var findCity = function(lat, lon, city) {
+
+    //https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&&appid=cb4e52cc5777eb1ec0226a6d4ac1e0a8
 
     //fetch request
-    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&&appid=cb4e52cc5777eb1ec0226a6d4ac1e0a8`)
+    fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely,alerts&units=imperial&appid=cb4e52cc5777eb1ec0226a6d4ac1e0a8`)
     .then(function(response) {
         if(response.ok) {
             response.json().then(function(data) {
@@ -73,7 +98,7 @@ var displayCity = function(city, data) {
         dayEl.classList = "card mt-2 list-item justify-space-between";
 
         //convert unix time to readable time
-        var timeData = data.list[i].dt * 1000;
+        var timeData = data.daily[i].dt * 1000;
         var dateData = new Date(timeData);
         var readDate = dateData.toLocaleString();
 
@@ -82,15 +107,23 @@ var displayCity = function(city, data) {
         locationEl.textContent = dayName;
 
         var dateData = readDate;
-        var minTempData = data.list[i].main.temp_min;
-        var maxTempData = data.list[i].main.temp_max;
-        var humidData = data.list[i].main.humidity;
-        var windData = data.list[i].wind.speed;
-        var descriptionData = JSON.stringify(data.list[i].weather[0].description);
+        var minTempData = data.daily[i].temp.min;
+        var maxTempData = data.daily[i].temp.max;
+        var humidData = data.daily[i].humidity;
+        var windData = data.daily[i].wind_speed;
+        var descriptionData = data.daily[i].weather[0].description;
 
+        // console.log(dateData);
+        // console.log(minTempData);
+        // console.log(maxTempData)
+        // console.log(humidData);
+        // console.log(windData);
+        // console.log(descriptionData);
+        
         //to display icons
-        var icon = data.list[i].weather[0].icon;
+        var icon = data.daily[i].weather[0].icon;
         var iconImage = "http://openweathermap.org/img/wn/" + icon + ".png";
+        // console.log(icon);
 
         var dateEl = document.createElement("h4");
         dateEl.textContent = readDate;
@@ -144,7 +177,7 @@ var cityString = [];
 
 // WHEN I click on a city in the search history
 // THEN I am again presented with current and future conditions for that city
-var saveCity = function(city) {
+var saveCity = function(lat, lon, city) {
 
     //inside of the function, i want to save the value of the text input
     localStorage.setItem("previousCity", city);
@@ -162,7 +195,7 @@ var saveCity = function(city) {
     //add city's value to the localstorage array in order to save to buttons
     savedCityEl.onclick = function() {
         citySearchTerm.textContent = savedCity;
-        findCity(savedCity);
+        findCity(lat, lon, savedCity);
 
     };
 };
