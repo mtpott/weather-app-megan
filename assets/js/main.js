@@ -115,7 +115,7 @@ var displayCity = function(city, data) {
         
         //to display icons
         var icon = data.daily[i].weather[0].icon;
-        var iconImage = "http://openweathermap.org/img/wn/" + icon + ".png";
+        var iconImage = "https://openweathermap.org/img/wn/" + icon + ".png";
 
         var dateEl = document.createElement("h4");
         dateEl.textContent = readDate;
